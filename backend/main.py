@@ -68,12 +68,17 @@ app.add_middleware(
 )
 
 # ---------------- GROQ ----------------
-GROQ_API_KEY = _load_groq_key_from_backend_env()
+def get_groq_client():
+    api_key = os.getenv("GROQ_API_KEY")
 
-if not GROQ_API_KEY:
-    print("⚠️ GROQ_API_KEY missing")
+    if not api_key:
+        print("❌ GROQ_API_KEY missing at runtime")
+        return None
 
-client = Groq(api_key=GROQ_API_KEY) if GROQ_API_KEY else None
+    print("✅ GROQ_API_KEY loaded successfully")
+    return Groq(api_key=api_key)
+
+client = get_groq_client()
 
 CHAT_MODEL = "llama-3.3-70b-versatile"
 WHISPER_MODEL = "whisper-large-v3"
